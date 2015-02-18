@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DraggableAndMultiSelectableRecyclerView">
+        <attr name="sbAllowDragging" format="boolean"/>
+        <attr name="sbAllowMultiSelect" format="boolean" />
+        <attr name="sbMultiSelectFormattedABString" format="string"/>
+
+    </declare-styleable>
+</resources>
