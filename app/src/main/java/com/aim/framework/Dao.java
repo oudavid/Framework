@@ -3,7 +3,8 @@ package com.aim.framework;
 /**
  * Created by Administrator on 2/18/15.
  */
-public interface Dao {
+public interface DAO {
+
     /**
      * Initialize this DAO. This should load any cached data if there was any saved.
      */
