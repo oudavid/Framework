@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by Administrator on 2/18/15.
  */
-public abstract class BaseDAO implements Dao {
+public abstract class BaseDAO implements DAO {
     private static final String TAG = BaseDAO.class.getSimpleName();
 
     protected final Context mContext;
