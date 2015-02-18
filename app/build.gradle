@@ -25,8 +25,11 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.google.http-client:google-http-client-jackson2:+'
+    compile 'com.google.code.gson:gson:2.3'
 }
