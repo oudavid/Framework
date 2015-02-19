@@ -23,33 +23,58 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A subclass of {@link android.support.v7.widget.RecyclerView} that supports additional optional
- * features like item dragging (including drag-to-delete functionality) and multi-select.  To support
- * these features, clients should supply a sublcass of {@link android.support.v7.widget.RecyclerView.Adapter}
+ * features like item dragging (including drag-to-delete functionality) and multi-select.
+ *
+ * To support these features, clients should supply a subccass of {@link android.support.v7.widget.RecyclerView.Adapter}
  * instead of subclassing from the vanilla Adapter. These features can be enabled and disabled
- * programmatically or via XML when declaring the view
+ * programmatically or via XML when declaring the view.
  *
  * Clients can optionally supply an {@link ItemDragAnimator} and/or {@link ItemMultiSelectAnimator} to
  * customize the behavior of dragged items if the default animator fallback that comes with this view
  * doesn't suit your needs.
  *
- * Created by David on 11/13/14.
+ * Created by dhull on 11/13/14.
  */
 public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
+    private static final String TAG = DraggableAndMultiSelectableRecyclerView.class.getSimpleName();
+
     private static final boolean DEFAULT_ALLOW_DRAGGING = false;
     private static final boolean DEFAULT_ALLOW_MULTI_SELECT = false;
 
+    private final EnumSet<RecyclerFeature> enabledFeatures = EnumSet.allOf(RecyclerFeature.class);
+
+    private String mMultiSelectActionBarFormattedString;
+
+    private ItemDragAnimator mDragAnimator = new DefaultDragAnimator();
+    private ItemMultiSelectAnimator mMultiSelectAnimator = new DefaultMultiSelectAnimator();
+
+    private DraggableAndMultiSelectableRecyclerViewListener mRecyclerViewListener;
+
+    private ActionMode mActionMode;
+    private ActionMode.Callback mActionModeCallback;
+
     public static enum RecyclerFeature {
-        ITEM_DRAG, MULTI_SELECT
+        ITEM_DRAG,
+        MULTI_SELECT
     }
 
-
-    /** describes how the user is interacting with the card at the moment */
+    /**
+     * Describes how the user is interacting with the card at the moment
+     */
     public enum CardState {
-        /** user is neither SWIPING nor long-pressing this card at the moment*/
+        /**
+         * User is neither SWIPING nor long-pressing this card at the moment
+         */
         IDLE,
-        /** user is actively dragging the card around (has not released) */
+
+        /**
+         * User is actively dragging the card around (has not released)
+         */
         SWIPING,
-        /** user is actively pressing down (but not dragging) this card.  Currently unused */
+
+        /**
+         * User is actively pressing down (but not dragging) this card.
+         */
         HOLDING
     }
 
@@ -68,26 +93,9 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
          *
          */
         boolean onDeleteItem(final ViewHolder holder);
-
     }
 
-    private static final String TAG = DraggableAndMultiSelectableRecyclerView.class.getSimpleName();
-
-    private final EnumSet<RecyclerFeature> enabledFeatures = EnumSet.allOf(RecyclerFeature.class);
-
-    private String mMultiSelectActionBarFormattedString;
-
-    private ItemDragAnimator mDragAnimator = new DefaultDragAnimator();
-    private ItemMultiSelectAnimator mMultiSelectAnimator = new DefaultMultiSelectAnimator();
-
-    private DraggableAndMultiSelectableRecyclerViewListener mRecyclerViewListener;
-
-    private ActionMode mActionMode;
-    private ActionMode.Callback mActionModeCallback;
-
-
     // region CONSTRUCTORS
-
     public DraggableAndMultiSelectableRecyclerView(Context context) {
         this(context, null, 0);
     }
@@ -176,8 +184,6 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
     }
 
     // region GETTERS AND SETTERS
-
-
     public String getMultiSelectActionBarFormattedString() {
         return mMultiSelectActionBarFormattedString;
     }
@@ -271,7 +277,6 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
 
         //  =-=-=-= TOUCH MANAGER:  USER EVENT HANDLERS
 
-
         private void handleSwipeStart(final DraggableAndMultiSelectableRecyclerView.ViewHolder holder) {
             if (mLastSwipedView != null) {
                 // TODO safety-check, probably doesn't need to be here after dev
@@ -304,8 +309,6 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
             }
         }
 
-
-
         // =-=-=-=  TOUCH MANAGER:  GESTURE LISTENER METHODS
 
         @Override
@@ -313,7 +316,6 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
             final View tappedView = findChildViewUnder(e.getX(), e.getY());
             if (tappedView == null)
                 return super.onSingleTapUp(e);
-
 
             if (mActionMode == null) {
                 ViewHolder holder = (ViewHolder) getChildViewHolder(tappedView);
@@ -333,9 +335,7 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
                 }
             }
             return super.onSingleTapUp(e);
-
         }
-
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceThisFrameX, float distanceThisFrameY) {
@@ -475,10 +475,11 @@ public class DraggableAndMultiSelectableRecyclerView extends RecyclerView {
         }
     }
 
-    /** Subclass this when creating the Adapter for use with this RecyclerView.  This
+    /**
+     * Subclass this when creating the Adapter for use with this RecyclerView. This
      * adapter handles multi-select logic (when necessary) and enforces the use of
      * {@link ViewHolder}
-     * */
+     */
     public static abstract class Adapter<T extends ViewHolder>
             extends RecyclerView.Adapter<T> implements MultiSelectAdapter {
         protected final SparseBooleanArray mSelectedItems = new SparseBooleanArray();
