@@ -16,4 +16,5 @@
     <string name="action_example">Example action</string>
 
     <string name="s_7.298"> %1$d selected</string>
+    <string name="title_activity_challenge">ChallengeActivity</string>
 </resources>
